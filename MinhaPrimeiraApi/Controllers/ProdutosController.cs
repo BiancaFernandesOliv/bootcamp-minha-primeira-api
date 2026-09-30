@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinhaPrimeiraApi.Models;
+using MinhaPrimeiraApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MinhaPrimeiraApi.Controllers {
 
@@ -8,34 +10,29 @@ namespace MinhaPrimeiraApi.Controllers {
 
     public class ProdutosController : ControllerBase {
 
-        private static readonly List<Produto> Produtos = new List<Produto> {
-            new Produto { Id = 1, Nome = "Caderno", Preco = 10.99m },
-            new Produto { Id = 2, Nome = "Lápis", Preco = 1.49m },
-            new Produto { Id = 3, Nome = "Borracha", Preco = 2.00m },
-            new Produto { Id = 4, Nome = "Caneta", Preco = 3.50m },
-            new Produto { Id = 5, Nome = "Mochila", Preco = 89.90m },
-            new Produto { Id = 6, Nome = "Estojo", Preco = 15.00m },
-            new Produto { Id = 7, Nome = "Apontador", Preco = 1.99m },
-            new Produto { Id = 8, Nome = "Régua", Preco = 2.50m },
-            new Produto { Id = 9, Nome = "Tesoura", Preco = 8.9m },
-            new Produto { Id = 10, Nome = "Cola", Preco = 4.00m },
-        };
+        private readonly AppDbContext _context;
+
+        public ProdutosController(AppDbContext context) {
+            _context = context;
+        }
 
         [HttpGet]
-        public IActionResult BuscarTodos() {
+        public async Task<IActionResult> BuscarTodos() {
+
+            var Produtos = await _context.Produtos.ToListAsync();
             return Ok(Produtos);
         }
 
         [HttpGet("{id}")]
-        public IActionResult BuscarPorId(int id) {
+        public async Task<IActionResult> BuscarPorId(int id) {
 
             if (id <= 0) {
                 return BadRequest("O id deve ser maior que zero.");
             }
 
-            var produto = Produtos.FirstOrDefault(p => p.Id == id);
+            var produto = await _context.Produtos.FindAsync(id);
 
-            if (produto == null) { 
+            if (produto == null) {
                 return NotFound($"Produto com ID {id} não encontrado.");
             }
 
@@ -43,13 +40,53 @@ namespace MinhaPrimeiraApi.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Criar([FromBody] Produto produto) {
+        public async Task<IActionResult> Criar([FromBody] Produto produto) {
 
-            if (ModelState.IsValid) {
+            if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
 
+            _context.Produtos.Add(produto);
+            await _context.SaveChangesAsync();
+
             return Ok($"Produto '{produto.Nome}' criado com sucesso!");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Atualizar(int id, [FromBody] Produto produtoAtualizado) {
+
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            var produto = await _context.Produtos.FindAsync(id);
+
+            if (produto == null) {
+                return NotFound($"Produto com ID {id} não encontrado.");
+            }
+
+            produto.Nome = produtoAtualizado.Nome;
+            produto.Preco = produtoAtualizado.Preco;
+
+            await _context.SaveChangesAsync();
+
+            return Ok($"Produto '{produto.Nome}' atualizado com sucesso!");
+        }
+
+        [HttpDelete("{id}")]
+
+        public async Task<IActionResult> Deletar(int id) {
+
+            var produto = await _context.Produtos.FindAsync(id);
+
+            if (produto == null) {
+                return NotFound($"Produto com ID {id} não encontrado.");
+            }
+
+            _context.Produtos.Remove(produto);
+            await _context.SaveChangesAsync();
+
+            return Ok($"Produto '{produto.Nome}' deletado com sucesso!");
         }
     }
 }
