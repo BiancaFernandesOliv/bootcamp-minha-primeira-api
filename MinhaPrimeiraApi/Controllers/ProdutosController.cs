@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinhaPrimeiraApi.Models;
-using MinhaPrimeiraApi.Data;
-using Microsoft.EntityFrameworkCore;
+using MinhaPrimeiraApi.Services;
 
 namespace MinhaPrimeiraApi.Controllers {
 
@@ -10,16 +9,15 @@ namespace MinhaPrimeiraApi.Controllers {
 
     public class ProdutosController : ControllerBase {
 
-        private readonly AppDbContext _context;
-
-        public ProdutosController(AppDbContext context) {
-            _context = context;
+        private readonly IProdutoService _service;
+        public ProdutosController(IProdutoService service) {
+            _service = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> BuscarTodos() {
 
-            var Produtos = await _context.Produtos.ToListAsync();
+            var Produtos = await _service.BuscarTodosAsync();
             return Ok(Produtos);
         }
 
@@ -30,7 +28,7 @@ namespace MinhaPrimeiraApi.Controllers {
                 return BadRequest("O id deve ser maior que zero.");
             }
 
-            var produto = await _context.Produtos.FindAsync(id);
+            var produto = await _service.BuscarPorIdAsync(id);
 
             if (produto == null) {
                 return NotFound($"Produto com ID {id} não encontrado.");
@@ -46,10 +44,15 @@ namespace MinhaPrimeiraApi.Controllers {
                 return BadRequest(ModelState);
             }
 
-            _context.Produtos.Add(produto);
-            await _context.SaveChangesAsync();
+            try {
 
-            return Ok($"Produto '{produto.Nome}' criado com sucesso!");
+                var produtoCriado = await _service.CriarAsync(produto);
+
+                return CreatedAtAction(nameof(BuscarPorId), new { id = produtoCriado.Id }, produtoCriado);
+            }
+            catch (ArgumentException ex) {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
@@ -59,16 +62,11 @@ namespace MinhaPrimeiraApi.Controllers {
                 return BadRequest(ModelState);
             }
 
-            var produto = await _context.Produtos.FindAsync(id);
+            var produto = await _service.AtualizarAsync(id, produtoAtualizado);
 
             if (produto == null) {
                 return NotFound($"Produto com ID {id} não encontrado.");
             }
-
-            produto.Nome = produtoAtualizado.Nome;
-            produto.Preco = produtoAtualizado.Preco;
-
-            await _context.SaveChangesAsync();
 
             return Ok($"Produto '{produto.Nome}' atualizado com sucesso!");
         }
@@ -77,16 +75,13 @@ namespace MinhaPrimeiraApi.Controllers {
 
         public async Task<IActionResult> Deletar(int id) {
 
-            var produto = await _context.Produtos.FindAsync(id);
+            var removido = await _service.DeletarAsync(id);
 
-            if (produto == null) {
+            if (!removido) {
                 return NotFound($"Produto com ID {id} não encontrado.");
             }
 
-            _context.Produtos.Remove(produto);
-            await _context.SaveChangesAsync();
-
-            return Ok($"Produto '{produto.Nome}' deletado com sucesso!");
+            return NoContent();
         }
     }
 }
