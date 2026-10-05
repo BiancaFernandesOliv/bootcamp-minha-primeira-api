@@ -12,10 +12,12 @@ namespace MinhaPrimeiraApi.Repositories {
         }
 
         public async Task<List<Produto>> BuscarTodosAsync() {
+
             return await _context.Produtos.ToListAsync();
         }
 
         public async Task<Produto?> BuscarPorIdAsync(int id) {
+
             return await _context.Produtos.FindAsync(id);
         }
 
@@ -48,6 +50,11 @@ namespace MinhaPrimeiraApi.Repositories {
             _context.Produtos.Remove(produto);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<bool> ExisteNomeAsync(string nome) {
+
+            return await _context.Produtos.AnyAsync(p => p.Nome == nome);
         }
     }
 }
