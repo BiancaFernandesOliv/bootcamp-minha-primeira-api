@@ -49,6 +49,18 @@ A aplicação utiliza uma separação entre Controller, Service e Repository, en
 
 ---
 
+## 🏗️ Arquitetura
+
+O projeto utiliza uma separação de responsabilidades entre as principais camadas:
+
+- **Controller:** recebe e responde às requisições HTTP.
+- **Service:** concentra as regras relacionadas aos produtos.
+- **Repository:** realiza as operações de acesso aos dados.
+- **Data:** contém o `AppDbContext`, responsável pela integração com o Entity Framework Core.
+- **Models:** representa as entidades utilizadas pela aplicação.
+
+---
+
 ## 📦 Produtos
 
 A API possui um controller responsável pelo gerenciamento de produtos.
@@ -79,6 +91,20 @@ O acesso ao banco é realizado por meio do **Entity Framework Core**, utilizando
 
 ---
 
+## 🌐 Integração com Frontend
+
+A API possui configuração de CORS para permitir requisições provenientes de uma aplicação Angular executada localmente em:
+
+`http://localhost:4200`
+
+---
+
+## 🚀 Documentação da API
+
+Durante a execução em ambiente de desenvolvimento, a API disponibiliza o Swagger para visualização e teste dos endpoints.
+
+---
+
 ## 🚀 Tecnologias
 
 - C#
@@ -88,3 +114,19 @@ O acesso ao banco é realizado por meio do **Entity Framework Core**, utilizando
 - SQLite
 - REST API
 - Swagger
+
+---
+
+## ▶️ Como executar
+
+### Pré-requisitos
+
+- .NET SDK
+- Visual Studio ou outra IDE compatível com .NET
+
+### Executando o projeto
+
+Clone o repositório:
+
+```bash
+git clone https://github.com/BiancaFernandesOliv/bootcamp-minha-primeira-api.git
