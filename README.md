@@ -130,3 +130,19 @@ Clone o repositório:
 
 ```bash
 git clone https://github.com/BiancaFernandesOliv/bootcamp-minha-primeira-api.git
+```
+
+Acesse a pasta do projeto:
+
+```bash
+cd bootcamp-minha-primeira-api
+```
+
+Execute a aplicação:
+
+```bash
+dotnet run
+```
+
+Após iniciar a aplicação, acesse o Swagger para visualizar e testar os endpoints.
+
