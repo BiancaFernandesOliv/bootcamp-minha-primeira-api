@@ -1,8 +1,8 @@
 # 💻 Minha Primeira API
 
-Projeto desenvolvido durante o módulo de APIs com ASP.NET Core do Bootcamp.
+Projeto desenvolvido durante o módulo de Desenvolvimento de APIs com ASP.NET Core do Bootcamp.
 
-A aplicação está sendo construída de forma incremental ao longo das aulas, com o objetivo de praticar os principais conceitos relacionados ao desenvolvimento de APIs REST utilizando C# e .NET.
+A aplicação foi construída de forma incremental ao longo das aulas, com o objetivo de praticar os principais conceitos relacionados ao desenvolvimento de APIs REST utilizando C# e .NET.
 
 ---
 
@@ -11,7 +11,9 @@ A aplicação está sendo construída de forma incremental ao longo das aulas, c
 - Praticar os fundamentos do desenvolvimento de APIs com ASP.NET Core.
 - Desenvolver endpoints utilizando controllers e rotas.
 - Trabalhar com métodos HTTP e parâmetros de rota.
+- Utilizar Entity Framework Core para persistência de dados.
 - Compreender o funcionamento de requisições e respostas HTTP.
+- Trabalhar com banco de dados SQLite.
 - Evoluir progressivamente uma Web API durante o módulo.
 
 ---
@@ -23,26 +25,49 @@ O projeto está organizado como uma aplicação ASP.NET Core Web API.
 ```text
 MinhaPrimeiraApi/
 ├── Controllers/
+├── Data/
+├── Migrations/
 ├── Models/
+├── Repositories/
+├── Services/
 ├── Properties/
 ├── Program.cs
 ├── appsettings.json
-└── MinhaPrimeiraApi.csproj
+├── MinhaPrimeiraApi.csproj
+└── minhaapi.db
 ```
+
+A aplicação utiliza uma separação entre Controller, Service e Repository para organizar as responsabilidades do projeto.
+
 ---
 
 ## 📦 Produtos
 
-A API possui um controller para gerenciamento de produtos.
+A API possui um controller responsável pelo gerenciamento de produtos.
 
-Atualmente, os produtos são mantidos em memória, sendo utilizados como contexto para praticar a construção dos endpoints e o tratamento das requisições.
+Os produtos são persistidos em um banco de dados SQLite utilizando Entity Framework Core.
 
 ### Endpoints disponíveis
 
 | Método | Rota | Descrição |
 |---|---|---|
-| `GET` | `/api/produtos` | Lista todos os produtos |
-| `GET` | `/api/produtos/{id}` | Busca um produto pelo ID |
+| GET | `/api/produtos` | Lista todos os produtos |
+| GET | `/api/produtos/{id}` | Busca um produto pelo ID |
+| POST | `/api/produtos` | Cadastra um novo produto |
+| PUT | `/api/produtos/{id}` | Atualiza um produto existente |
+| DELETE | `/api/produtos/{id}` | Remove um produto |
+
+---
+
+## 🗄️ Banco de dados
+
+A aplicação utiliza **SQLite** para persistência dos dados.
+
+O acesso ao banco é realizado por meio do **Entity Framework Core**, utilizando:
+
+- `DbContext`
+- `DbSet`
+- Migrations
 
 ---
 
@@ -51,4 +76,7 @@ Atualmente, os produtos são mantidos em memória, sendo utilizados como context
 - C#
 - .NET
 - ASP.NET Core
+- Entity Framework Core
+- SQLite
 - REST API
+- Swagger
