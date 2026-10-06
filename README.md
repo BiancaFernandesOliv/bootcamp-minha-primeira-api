@@ -25,19 +25,27 @@ O projeto está organizado como uma aplicação ASP.NET Core Web API.
 ```text
 MinhaPrimeiraApi/
 ├── Controllers/
+│   └── ProdutosController.cs
 ├── Data/
+│   └── AppDbContext.cs
 ├── Migrations/
 ├── Models/
+│   └── Produto.cs
 ├── Repositories/
+│   ├── IProdutoRepository.cs
+│   └── ProdutoRepository.cs
 ├── Services/
+│   ├── IProdutoService.cs
+│   └── ProdutoService.cs
 ├── Properties/
+│   └── launchSettings.json
 ├── Program.cs
 ├── appsettings.json
 ├── MinhaPrimeiraApi.csproj
 └── minhaapi.db
 ```
 
-A aplicação utiliza uma separação entre Controller, Service e Repository para organizar as responsabilidades do projeto.
+A aplicação utiliza uma separação entre Controller, Service e Repository, enquanto a camada Data concentra o contexto do Entity Framework.
 
 ---
 
